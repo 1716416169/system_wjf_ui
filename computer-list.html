@@ -61,8 +61,6 @@
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
-
-        var buf=[];
         var check;
         layui.use(['form','table','layer'],
         function() {
@@ -73,39 +71,27 @@
 
 
             table.on('checkbox(table_edit)', function(obj){
-                check = table.checkStatus('computer_table');
-                console.log(obj);
-                console.log(obj.checked); //当前是否选中状态
+                check = table.checkStatus('c_computer');
+                console.log(check)
                 console.log(obj.data); //选中行的相关数据
-                console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+                console.log(obj)
+
 
             });
 
             form.on('submit(search)', function(data){
                 console.log(data)
                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-                data.field.page=1;
-                data.field.size=30;
-                $.ajax({
-                    url: url+"/computer/selectComputerByName",
-                    data: data.field,
-                    type: "get",
-                    dataType:"json",
-                    success:function (data) {
-                        console.log(data)
-                        table.reload('computer_table', {
-                            where: data
-                            ,page: {
-                                curr: 1 //重新从第 1 页开始
-                            }
-                        }); //只重载数据
-                    },
-                    error:function(data){
-                        console.log(data)
+                table.reload('c_computer', {
+                    url:url+"/computer/selectComputerByName",
+                    where: { //设定异步数据接口的额外参数，任意设
+                       name:data.field.name
+                        //…
                     }
-                })
-                })
-
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                }); //只重载数据
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             table.on('tool(table_edit)', function(obj){
@@ -144,9 +130,7 @@
                                 //关闭当前frame
                                 layer.close(index);
                                 console.log(index)
-
-                            });
-
+                        });
                     });
                 } else if(layEvent === 'edit'){ //编辑
                     //do something
@@ -187,8 +171,9 @@
             });
             table.render({
                 elem:'#computer_table',
-                height: 300,
-                width: 1080,
+                id:"c_computer",
+                height: 600,
+                width: 1500,
                 url:url+"/computer/selectComputer",
                 page:true,
                 request:{
@@ -210,27 +195,52 @@
                 },
                 cols:[[
                     {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left',hide:false,type:'checkbox'},
-                    {field: 'id_computer', title: '计算机货号', width:120, sort: true, fixed: 'left',edit:"text"},
-                    {field: 'name', title: '计算机名称', width:120, sort: true, fixed: 'left',edit:"text"},
+                    {field: 'id_computer', title: '计算机货号', width:150, sort: true, fixed: 'left',edit:"text"},
+                    {field: 'name', title: '计算机名称', width:150, sort: true, fixed: 'left',edit:"text"},
                     {field: 'date', title: '生产日期', width:100, sort: true, fixed: 'left',edit:"text"},
                     {field: 'price', title: '价格', width:80, sort: true, fixed: 'left',edit:"text"},
                     {field: 'number', title: '数量', width:80, sort: true, fixed: 'left',edit:"text"},
-                    {field: 'fro', title: '生产商', width:100, sort: true, fixed: 'left',edit:"text"},
-                    {field: 'configs', title: '配置信息', width:135, sort: true, fixed: 'left',edit:"text"},
+                    {field: 'fro', title: '生产商', width:250, sort: true, fixed: 'left',edit:"text"},
+                    {field: 'configs', title: '配置信息', width:350, sort: true, fixed: 'left',edit:"text"},
                     {fixed: 'right', width:250, align:'center', toolbar: '#barDemo'}
                 ]]
 
+            })
         });
-        function delAll(argument) {
-            console.log(check)
-            console.log(argument)
-            layer.confirm('确认要删除吗？' ,
+        function delAll() {
+            layer.confirm('确认要删除吗？',
             function(index) {
-                //捉到所有被选中的，发异步进行删除
-                layer.msg('删除成功', {
-                    icon: 1
-                });
-                layer.close(index)
+                console.log(check)
+                var buf=[];
+                for(var i=check.data.length;i>0;i--){
+                    buf.push(check.data[i-1].id)
+                }
+                console.log(buf)
+                var c_array={page:1,size:30}
+                c_array.ids=buf;
+                console.log(c_array)
+                layer.close(index);
+                $.ajax({
+                    url: url+"/computer/deleteComputer",
+                    data:c_array,
+                    type:"delete",
+                    dataType:"json",
+                    success:function (data) {
+                        console.log(data)
+                    },
+                    error:function(data){
+                        console.log(data)
+                    }
+                })
+                layer.alert("删除成功", {
+                        icon: 6
+                    },
+                    function(index) {
+                        // 获得frame索引
+                        //关闭当前frame
+                        layer.close(index);
+                        location.reload()
+                    });
             });
         }</script>
 
