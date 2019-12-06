@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>欢迎页面-X-admin2.2</title>
+    <title></title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -24,21 +24,15 @@
         <form class="layui-form">
             <div class="layui-form-item">
                 <label  class="layui-form-label">
-                    <span class="x-red">*</span>计算机货号</label>
+                    <span class="x-red">*</span>设备货号</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="id_computer" name="id_computer" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                    <input type="text" id="id_other" name="id_other" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
             </div>
             <div class="layui-form-item">
                 <label  class="layui-form-label">
-                    <span class="x-red">*</span>计算机名称</label>
+                    <span class="x-red">*</span>设备名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
-            </div>
-            <div class="layui-form-item">
-                <label  class="layui-form-label">
-                    <span class="x-red">*</span>生产日期</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="date" name="date" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
             </div>
             <div class="layui-form-item">
                 <label  class="layui-form-label">
@@ -53,15 +47,9 @@
                     <input type="text" id="number" name="number" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
             </div>
             <div class="layui-form-item">
-                <label  class="layui-form-label">
-                    <span class="x-red">*</span>生产商</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="fro" name="fro" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
-            </div>
-            <div class="layui-form-item">
-                <label  class="layui-form-label">配置信息</label>
+                <label  class="layui-form-label">备注</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" id="configs" name="configs" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入内容" id="remarks" name="remarks" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -70,7 +58,58 @@
         </form>
     </div>
 </div>
+<script>layui.use(['form', 'layer'],
+    function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
 
+        //自定义验证规则
+        form.verify({
+            nikename: function(value) {
+                if (value.length < 5) {
+                    return '昵称至少得5个字符啊';
+                }
+            },
+            pass: [/(.+){6,12}$/, '密码必须6到12位'],
+            repass: function(value) {
+                if ($('#L_pass').val() != $('#L_repass').val()) {
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)',
+            function(data) {
+                data.field.page=1;
+                data.field.size=30;
+                console.log(data.field)
+                $.ajax({
+                    url: url+"/others/insertOther",
+                    data: data.field,
+                    type: "put",
+                    dataType:"json",
+                    success:function (data) {
+                        console.log(data)
+                    },
+                    error:function(data){
+                        console.log(data)
+                    }
+
+                })
+                layer.alert("增加成功", {
+                        icon: 6
+                    },
+                    function(index) {
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        parent.location.reload();
+                    });
+                return false;
+            });
+
+    });</script>
 </body>
 
 </html>
