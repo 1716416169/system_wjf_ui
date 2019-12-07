@@ -42,7 +42,7 @@
                         <div class="layui-card-header">
                             <button class="layui-btn layui-btn-danger" onclick="delAll()" id="deletes">
                                 <i class="layui-icon"></i>批量删除</button>
-                            <button class="layui-btn" onclick="xadmin.open('添加计算机','./computer-add.html',800,600)">
+                            <button class="layui-btn" onclick="xadmin.open('添加计算机','./computer-add.html',800,600)" id="add">
                                 <i class="layui-icon"></i>添加</button></div>
                         <div class="layui-card-body ">
                             <table id="computer_table" lay-filter="table_edit" class="layui-table layui-form">
@@ -56,21 +56,25 @@
             </div>
         </div>
     </body>
-    <script type="text/html" id="barDemo">
+    <div type="text/html" id="barDemo">
         <!--<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
+        <a class="layui-btn layui-btn-xs" lay-event="edit" id="ed">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" id="de">删除</a>
+    </div>
     <script>
-        $(document).ready(function(){
-            alert(all_context)
-            if(all_context==1){
+        window.onload=function(){
+            console.log(document.cookie)
+            if(document.cookie=="user"){
+                console.log("限制权限")
                 $("#deletes").hide();
-                $("#barDemo").hide();
+                $("#add").hide();
+
+                $("#ed").hide();
+                $("#de").hide();
             }
             //HollyProxy.HomePage.prototype.search(view,startDate,endDate,'${ctx}');
 
-        });
+        };
         var check;
         layui.use(['form','table','layer'],
         function() {

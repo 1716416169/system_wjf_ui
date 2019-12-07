@@ -29,6 +29,10 @@
             <hr class="hr15">
             <input name="password"placeholder="密码"  type="password" lay-verify="required"  class="layui-input">
             <hr class="hr15">
+            <div class="layui-input-block">
+                <input type="checkbox" name="manger" title="管理员">
+            </div>
+            <hr class="hr15">
             <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
             <hr class="hr20" >
             <input value="注册" lay-submit lay-filter="register" style="width:100%;" type="button">
@@ -43,55 +47,121 @@
               var form = layui.form;
 
                 form.on('submit(register)', function(data){
-                    console.log(data)
-                    $.ajax({
-                        url: url+"/login/register",
-                        data: data.field,
-                        type:"put",
-                        dataType:"json",
-                        success:function (data) {
-                            if(data==1){
-                                alert("注册成功")
+                    console.log(data.field.manger)
+                    if(data.field.manger!="on"){
+                        delete data.field.manger
+                        $.ajax({
+                            url: url+"/login/register",
+                            data: data.field,
+                            type:"put",
+                            dataType:"json",
+                            success:function (data) {
+                                if(data==1){
+                                    alert("注册成功")
+                                    console.log(data)
+                                    window.location.href="./login.html"
+                                }else {
+                                    alert("账户存在")
+                                }
+
+                            },
+                            error:function (data) {
                                 console.log(data)
-                                window.location.href="./login.html"
-                            }else {
-                                alert("账户存在")
                             }
 
-                        },
-                        error:function (data) {
-                            console.log(data)
-                        }
+                        })
+                    }else{
+                        delete data.field.manger
+                        $.ajax({
+                            url: url+"/loginManger/register",
+                            data: data.field,
+                            type:"put",
+                            dataType:"json",
+                            success:function (data) {
+                                if(data==11){
+                                    alert("注册成功")
+                                    console.log(data)
+                                    window.location.href="./login.html"
+                                }else {
+                                    alert("账户存在")
+                                }
+                            },
+                            error:function (data) {
+                                console.log(data)
+                            }
 
-                    })
+                        })
+                    }
+
                     // alert(888)
                     return false;
                 });
               form.on('submit(login)', function(data){
-                  console.log(data)
-                 $.ajax({
-                      url: url+"/login/login",
-                      data: data.field,
-                     type:"get",
-                     dataType:"json",
-                     success:function (data) {
-                         if(data==1){
-                             alert("登录成功")
-                             console.log(data)
-                             all_context=1;
-                             window.location.href="./index.html"
-                         }else {
-                             all_context=0
-                             alert("登录失败")
-                         }
-                         console.log(data)
-                     },
-                     error:function (data) {
+                  console.log(data.field.manger)
+                  if(data.field.manger!="on"){
+                      delete data.field.manger
+                      console.log(data)
+                      $.ajax({
+                          url: url+"/login/login",
+                          data: data.field,
+                          type:"get",
+                          dataType:"json",
+                          xhrFields: {
+                              withCredentials: true
+                          },
+                          // 允许跨域
+                          crossDomain: true,
+                          success:function (data) {
+                              if(data!=null){
+                                  console.log(data)
+                                  document.cookie=data.flag
+                                  console.log(document.cookie)
+                                  alert("登录成功")
+                                  window.location.href="./index.html"
+                              }else {
 
-                         console.log(data)
-                     }
+                                  alert("登录失败")
+                              }
+                              console.log(data)
+                          },
+                          error:function (data) {
 
-                  })
+                              console.log(data)
+                          }
+
+                      })
+                  }else {
+                      delete data.field.manger
+                      $.ajax({
+                          url: url+"/loginManger/login",
+                          data: data.field,
+                          type:"get",
+                          dataType:"json",
+                          xhrFields: {
+                              withCredentials: true
+                          },
+                          // 允许跨域
+                          crossDomain: true,
+                          success:function (data) {
+                              if(data!=null){
+                                  console.log(data)
+                                  document.cookie=data.flag
+                                  console.log(document.cookie)
+                                  alert("登录成功")
+                                  window.location.href="./index.html"
+                              }else {
+
+                                  alert("登录失败")
+                              }
+                              console.log(data)
+                          },
+                          error:function (data) {
+
+                              console.log(data)
+                          }
+                      })
+                  }
+
                 // alert(888)
                 return false;
               });
