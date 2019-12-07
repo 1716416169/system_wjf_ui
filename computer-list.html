@@ -12,6 +12,7 @@
         <script src="./lib/layui/layui.js" charset="utf-8"></script>
         <script type="text/javascript" src="./js/xadmin.js"></script>
         <script src="./js/url.js"></script>
+        <script src="./js/jquery.min.js"></script>
     </head>
     
     <body>
@@ -39,7 +40,7 @@
                             </form>
                         </div>
                         <div class="layui-card-header">
-                            <button class="layui-btn layui-btn-danger" onclick="delAll()">
+                            <button class="layui-btn layui-btn-danger" onclick="delAll()" id="deletes">
                                 <i class="layui-icon"></i>批量删除</button>
                             <button class="layui-btn" onclick="xadmin.open('添加计算机','./computer-add.html',800,600)">
                                 <i class="layui-icon"></i>添加</button></div>
@@ -61,6 +62,15 @@
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
+        $(document).ready(function(){
+            alert(all_context)
+            if(all_context==1){
+                $("#deletes").hide();
+                $("#barDemo").hide();
+            }
+            //HollyProxy.HomePage.prototype.search(view,startDate,endDate,'${ctx}');
+
+        });
         var check;
         layui.use(['form','table','layer'],
         function() {
