@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/system_wjf.iml" filepath="$PROJECT_DIR$/.idea/system_wjf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/system_wjf_ui.iml" filepath="$PROJECT_DIR$/.idea/system_wjf_ui.iml" />
     </modules>
   </component>
 </project>

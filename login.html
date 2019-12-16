@@ -106,15 +106,10 @@
                           data: data.field,
                           type:"get",
                           dataType:"json",
-                          xhrFields: {
-                              withCredentials: true
-                          },
-                          // 允许跨域
-                          crossDomain: true,
                           success:function (data) {
                               if(data!=null){
                                   console.log(data)
-                                  document.cookie=data.flag
+                                  document.cookie="user"
                                   console.log(document.cookie)
                                   alert("登录成功")
                                   window.location.href="./index.html"
@@ -137,15 +132,10 @@
                           data: data.field,
                           type:"get",
                           dataType:"json",
-                          xhrFields: {
-                              withCredentials: true
-                          },
-                          // 允许跨域
-                          crossDomain: true,
                           success:function (data) {
                               if(data!=null){
                                   console.log(data)
-                                  document.cookie=data.flag
+                                  document.cookie="manger"
                                   console.log(document.cookie)
                                   alert("登录成功")
                                   window.location.href="./index.html"
